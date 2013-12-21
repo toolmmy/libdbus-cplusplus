@@ -30,11 +30,86 @@
 #include <dbus/dbus.h>
 #include <cstdlib>
 #include <stdarg.h>
+#include <unistd.h>
 
 #include "message_p.h"
 #include "internalerror.h"
 
 using namespace DBus;
+
+UnixFd::UnixFd()
+  : _fileDescriptor(-1)
+{
+}
+
+UnixFd::UnixFd(const int &fileDescriptor, bool takeOwnership)
+{
+	if(takeOwnership)
+	{
+		this->_fileDescriptor = fileDescriptor;
+	} else
+	{
+		this->_fileDescriptor = dup(fileDescriptor);
+	}
+}
+
+UnixFd::~UnixFd()
+{
+	if(this->_fileDescriptor > -1)
+	{
+		close(this->_fileDescriptor);
+	}
+}
+
+int UnixFd::getFileDescriptor() const
+{
+	return this->_fileDescriptor;
+}
+
+bool UnixFd::isOpen() const
+{
+	return (this->_fileDescriptor >= 0);
+}
+
+UnixFd& UnixFd::assignFrom(const int& fileDescriptor, bool takeOwnership)
+{
+	if(this->isOpen())
+	{
+		close(this->_fileDescriptor);
+	}
+
+	if(takeOwnership)
+	{
+		this->_fileDescriptor = fileDescriptor;
+	} else
+	{
+		this->_fileDescriptor = dup(fileDescriptor);
+	}
+
+	return *this;
+}
+
+UnixFd& UnixFd::assignFrom(const UnixFd& unixFd, bool takeOwnership)
+{
+	if(this == &unixFd)
+	{
+		return *this;
+	}
+
+	if(this->isOpen())
+	{
+		close(this->_fileDescriptor);
+	}
+
+	if(takeOwnership)
+	{
+		this->_fileDescriptor = unixFd._fileDescriptor;
+	} else {
+		this->_fileDescriptor = dup(unixFd._fileDescriptor);
+	}
+
+	return *this;
+}
 
 Variant::Variant()
   : _msg(CallMessage()) // dummy message used as temporary storage for variant data

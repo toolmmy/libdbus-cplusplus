@@ -101,6 +101,20 @@ public:
 
   const char *get_path();
 
+  /**
+   * Added by toolmmy <toolmmy@gmail.com>
+   *
+   * Appends a Unix file descriptor.
+   */
+  bool append_unix_fd(int fileDescriptor);
+
+  /**
+   * Added by toolmmy <toolmmy@gmail.com>
+   *
+   * Returns a Unix file descriptor from the bus.
+   */
+  int get_unix_fd();
+
   bool append_signature(const char *chars);
 
   const char *get_signature();

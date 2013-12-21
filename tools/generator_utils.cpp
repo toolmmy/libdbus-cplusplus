@@ -68,6 +68,7 @@ const char *atomic_type_to_string(char t)
     { 'd', "double" },
     { 's', "std::string" },
     { 'o', "::DBus::Path" },
+    { 'h', "::DBus::UnixFd" },
     { 'g', "::DBus::Signature" },
     { 'v', "::DBus::Variant" },
     { '\0', "" }

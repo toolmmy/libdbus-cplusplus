@@ -212,6 +212,18 @@ const char *MessageIter::get_path()
   return chars;
 }
 
+bool MessageIter::append_unix_fd(int fileDescriptor)
+{
+	return append_basic(DBUS_TYPE_UNIX_FD, &fileDescriptor);
+}
+
+int MessageIter::get_unix_fd()
+{
+	int fd;
+	get_basic(DBUS_TYPE_UNIX_FD, &fd);
+	return fd;
+}
+
 bool MessageIter::append_signature(const char *chars)
 {
   return append_basic(DBUS_TYPE_SIGNATURE, &chars);
