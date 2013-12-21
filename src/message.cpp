@@ -358,12 +358,25 @@ void MessageIter::copy_data(MessageIter &to)
       debug_log("copying compound type: %c[%s]", from.type(), sig);
 
       MessageIter to_container(to.msg());
+      /**
+       * Replaced
+
       dbus_message_iter_open_container
       (
         (DBusMessageIter *) & (to._iter),
         from.type(),
         from.type() == DBUS_TYPE_VARIANT ? NULL : sig,
         (DBusMessageIter *) & (to_container._iter)
+      );
+      */
+      /**
+       * Added by toolmmy <toolmmy@gmail.com>
+       * see https://bugs.launchpad.net/ubuntu/+source/dbus-c++/+bug/1098723
+       */
+      dbus_message_iter_open_container(
+    		  (DBusMessageIter *) &(to._iter), from.type(),
+    		  ((from.type() == DBUS_TYPE_STRUCT) || (from.type() == DBUS_TYPE_DICT_ENTRY) ?  NULL : sig),
+    		  (DBusMessageIter *) &(to_container._iter)
       );
 
       from_container.copy_data(to_container);
