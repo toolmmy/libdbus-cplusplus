@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<node name="/org/freedesktop/DBus/Examples/UnixChannel">
+	<interface name="org.freedesktop.DBus.UnixChannelDemo">
+		<method name="Aquire">
+			<arg type="h" name="fd" direction="out" />
+		</method>
+		<method name="Release" />
+		<method name="GetProperties">
+			<arg type="a{ss}" name="properties" direction="out" />
+		</method>
+	</interface>
+</node>
+   
+    
