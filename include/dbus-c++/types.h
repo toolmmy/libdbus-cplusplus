@@ -100,7 +100,7 @@ struct DXXAPI UnixFd
 	 * @param fileDescriptor Existing file descriptor used in the created UnixFd object.
 	 * @param takeOwnership Bool that forces to change the ownership of the given fileDescriptor.
 	 */
-	explicit UnixFd(const int &fileDescriptor, bool takeOwnership);
+	explicit UnixFd(const int& fileDescriptor, bool takeOwnership);
 
 	/**
 	 * Destructor.
@@ -121,7 +121,7 @@ struct DXXAPI UnixFd
 	 * Copy constructor.
 	 * Note: The copy constructor never takes the ownership of the underlying file descriptor.
 	 */
-	UnixFd(const UnixFd &unixFd)
+	UnixFd(const UnixFd& unixFd)
 	{
 		assignFrom(unixFd, false);
 	}
@@ -129,15 +129,16 @@ struct DXXAPI UnixFd
 	/**
 	 * @see UnixFd(const UnixFd)
 	 */
-	UnixFd &operator =(const UnixFd &unixFd)
+	UnixFd& operator = (const UnixFd& unixFd)
 	{
 		return assignFrom(unixFd, false);
 	}
 private:
-	UnixFd &assignFrom(const int &fileDescriptor, bool takeOwnership);
-	UnixFd &assignFrom(const UnixFd &unixFd, bool takeOwnership);
-private:
 	int _fileDescriptor;
+
+	UnixFd& assignFrom(const int& fileDescriptor, bool takeOwnership);
+	UnixFd& assignFrom(const UnixFd& unixFd, bool takeOwnership);
+
 };
 
 struct DXXAPI Invalid
@@ -576,6 +577,12 @@ inline DBus::MessageIter &operator >>(DBus::MessageIter &iter, std::string &val)
 inline DBus::MessageIter &operator >>(DBus::MessageIter &iter, DBus::Path &val)
 {
 	val = iter.get_path();
+	return ++iter;
+}
+
+inline DBus::MessageIter &operator >>(DBus::MessageIter &iter, DBus::UnixFd &val)
+{
+	val = DBus::UnixFd(iter.get_unix_fd(), true);
 	return ++iter;
 }
 

@@ -318,20 +318,26 @@ void MessageIter::close_container(MessageIter &container)
 
 static bool is_basic_type(int typecode)
 {
+  /**
+   * Updated by toolmmy <toolmmy@gmail.com>
+   *
+   * Make use of Macros instead using the chars (makes it more readable)
+   */
   switch (typecode)
   {
-  case 'y':
-  case 'b':
-  case 'n':
-  case 'q':
-  case 'i':
-  case 'u':
-  case 'x':
-  case 't':
-  case 'd':
-  case 's':
-  case 'o':
-  case 'g':
+  case DBUS_TYPE_BOOLEAN: 		//'b'
+  case DBUS_TYPE_BYTE: 			//'y'
+  case DBUS_TYPE_UINT16:		//'q'
+  case DBUS_TYPE_UINT32:		//'u'
+  case DBUS_TYPE_UINT64:		//'t'
+  case DBUS_TYPE_INT16: 		//'n'
+  case DBUS_TYPE_INT32:			//'i'
+  case DBUS_TYPE_INT64:			//'x'
+  case DBUS_TYPE_DOUBLE:		//'d'
+  case DBUS_TYPE_STRING:		//'s'
+  case DBUS_TYPE_OBJECT_PATH:	//'o'
+  case DBUS_TYPE_UNIX_FD:		//'h'
+  case DBUS_TYPE_SIGNATURE:		//'g'
     return true;
   default:
     return false;
