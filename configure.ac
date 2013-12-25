@@ -233,6 +233,7 @@ AC_OUTPUT(
 	examples/hal/Makefile
 	examples/glib/Makefile
 	examples/echo_ecore/Makefile
+	examples/unixfd/Makefile
 	dbus-c++-1.pc
 	dbus-c++-1-uninstalled.pc
 	dbus-c++-ecore-1.pc
