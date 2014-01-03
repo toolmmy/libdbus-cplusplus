@@ -1,5 +1,7 @@
 # hacky, but ...
 
+if ENABLE_TOOLS
+
 CXX = $(CXX_FOR_BUILD)
 
 AM_CPPFLAGS = \
@@ -27,3 +29,5 @@ dbusxx_introspect_LDADD = $(libdbus_cxx_la)
 
 MAINTAINERCLEANFILES = \
 	Makefile.in
+
+endif
