@@ -42,6 +42,13 @@ AC_ARG_ENABLE(tests,
  	[enable_tests=yes]
 )
 
+AC_ARG_ENABLE(tools,
+	AS_HELP_STRING([--enable-tools],
+		[build tools]),
+	[enable_tools=$enableval],
+ 	[enable_tools=yes]
+)
+
 AC_ARG_ENABLE(examples,
 	AS_HELP_STRING([--enable-examples],
 		[build examples]),
@@ -137,11 +144,34 @@ else
 AM_CONDITIONAL(ENABLE_ECORE, test 0 = 1)
 fi
 
+
+if test "$enable_tools" = "yes" ; then 
+	AM_CONDITIONAL(ENABLE_TOOLS, test 1 = 1)
+	AC_CHECK_LIB([expat], XML_ParserCreate_MM,
+	   	[AC_CHECK_HEADERS(expat.h, have_expat=true, have_expat=false)],
+		have_expat=false)
+
+	if ! $have_expat; then
+		AC_MSG_ERROR([You need the eXpat xml parser]
+			[http://expat.sourceforge.net/])
+	fi
+
+	xml_CFLAGS=
+	xml_LIBS=-lexpat
+
+	AC_SUBST(xml_CFLAGS)
+	AC_SUBST(xml_LIBS)
+else
+AM_CONDITIONAL(ENABLE_TOOLS, test 0 = 1)
+fi
+
+
 if test "$enable_tests" = "yes" ; then
 AM_CONDITIONAL(ENABLE_TESTS, test 1 = 1)
 else
 AM_CONDITIONAL(ENABLE_TESTS, test 0 = 1)
 fi
+
 
 if test "$enable_examples" = "yes" ; then
 AM_CONDITIONAL(ENABLE_EXAMPLES, test 1 = 1)
@@ -149,20 +179,8 @@ else
 AM_CONDITIONAL(ENABLE_EXAMPLES, test 0 = 1)
 fi
 
-AC_CHECK_LIB([expat], XML_ParserCreate_MM,
-   	[AC_CHECK_HEADERS(expat.h, have_expat=true, have_expat=false)],
-	have_expat=false)
 
-if ! $have_expat; then
-	AC_MSG_ERROR([You need the eXpat xml parser]
-		[http://expat.sourceforge.net/])
-fi
 
-xml_CFLAGS=
-xml_LIBS=-lexpat
-
-AC_SUBST(xml_CFLAGS)
-AC_SUBST(xml_LIBS)
 
 ACX_PTHREAD
 if test x"$acx_pthread_ok" = xyes; then
@@ -254,6 +272,7 @@ echo
 echo "Optional build items:"
 echo "build tests.................... $enable_tests"
 echo "build examples................. $enable_examples"
+echo "build tools.................... $enable_tools"
 echo "build doxygen documentation.... $enable_doxygen_docs"
 echo "Cross Compiling activated...... $cross_compiling"
 echo "PThread support found.......... $acx_pthread_ok"
