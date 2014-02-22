@@ -26,19 +26,22 @@ public:
 	UnixChannelServer(DBus::Connection &connection) :
 		DBus::ObjectAdaptor(connection, UNIX_CHANNEL_SERVER_PATH)
 	{
-		this->_fd = -1;
+		this->_fd = open("client_msg.txt", O_RDWR|O_CREAT, 0644);
+	}
+
+	~UnixChannelServer() {
+
+		if(this->_fd != -1) {
+			close(this->_fd);
+		}
 	}
 
 	::DBus::UnixFd Aquire()
 	{
-		if(this->_fd == -1) {
-			//lets make a copy, otherwise the original STDOUT_FILENO gets closed in the release method
-			this->_fd  = dup(STDOUT_FILENO);
-		}
+		int fd = dup( this->_fd);
+		printf("Aquire(): Returning fd [%d] from origin [%d]\n", fd, this->_fd);
 
-		printf("Aquire(): Returning fd [%d]\n", this->_fd);
-
-		return DBus::UnixFd(this->_fd, true);
+		return DBus::UnixFd(fd, true);
 	}
 
 	void Release()

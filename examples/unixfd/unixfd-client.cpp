@@ -54,6 +54,11 @@ int main()
 		char msg[] = "Client: hi server!\n";
 		write(fd.getFileDescriptor(), msg, sizeof(msg));
 	}
+	DBus::UnixFd fd2 = client.Aquire();
+	if(fd2.isOpen()) {
+		char msg2[] = "Client: its me again.\n";
+		write(fd2.getFileDescriptor(), msg2, sizeof(msg2));
+	}
 
 	client.Release();
 	std::cout << "Client: Bye." << std::endl;
