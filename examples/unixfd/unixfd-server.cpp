@@ -24,10 +24,9 @@ private:
 
 public:
 	UnixChannelServer(DBus::Connection &connection) :
-		_fd(-1),
 		DBus::ObjectAdaptor(connection, UNIX_CHANNEL_SERVER_PATH)
 	{
-
+		this->_fd = -1;
 	}
 
 	::DBus::UnixFd Aquire()
